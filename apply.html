@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Apply | Ken Cordele Griffin Academy</title>
+  <link rel="icon" href="assets/crest.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="index.html"><img src="assets/crest.png" alt="" /><div><strong>KEN CORDELE GRIFFIN</strong><span>ACADEMY</span></div></a>
+      <nav class="links">
+        <a href="index.html">Home</a>
+        <a href="academy.html">Academy</a>
+        <a href="courses.html">Courses</a>
+        <a href="method.html">Method</a>
+        <a href="library.html">Library</a>
+        <a href="faq.html">FAQ</a>
+      </nav>
+      <a class="btn" href="apply.html">Apply</a>
+    </div>
+  </header>
+
+  <section>
+    <div class="wrap grid-2">
+      <div>
+        <p class="kicker">APPLICATION</p>
+        <h1>Tell us how you work.</h1>
+        <p class="lede">Cohorts are capped. We read the writing sample more carefully than the résumé.</p>
+        <p class="note" style="margin-top:24px">Submitting this form is not enrollment. You will receive a follow-up from admissions@kengriffin.courses. Wire this form to your email or Typeform before launch.</p>
+      </div>
+      <form action="mailto:admissions@kengriffin.courses" method="post" enctype="text/plain">
+        <label>Full name</label>
+        <input name="name" required placeholder="Your name" />
+        <label>Email</label>
+        <input type="email" name="email" required placeholder="you@domain.com" />
+        <label>Track</label>
+        <select name="track">
+          <option>Foundations of Institutional Thinking</option>
+          <option>Research Memo waitlist</option>
+        </select>
+        <label>Why this academy (150 words)</label>
+        <textarea name="why" required></textarea>
+        <label>A decision you made and how you judged the risk (150 words)</label>
+        <textarea name="risk" required></textarea>
+        <button class="btn" type="submit">Submit application</button>
+        <p class="disclaimer">By applying you confirm you understand this is an independent school and not Citadel.</p>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap"><p class="legal-mini">Independent educational brand. Not affiliated with Citadel LLC, Citadel Securities, or Kenneth C. Griffin.</p></div>
+  </footer>
+</body>
+</html>
