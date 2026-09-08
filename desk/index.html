@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Desk | Ken Cordele Griffin Academy</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <link rel="canonical" href="https://kengriffin.courses/desk/" />
+  <link rel="icon" href="/assets/crest.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="/desk/">
+        <img src="/assets/crest.png" alt="" />
+        <div><strong>KEN CORDELE GRIFFIN</strong><em>DESK</em></div>
+      </a>
+      <nav class="links">
+        <a class="active" href="/desk/">Desk</a>
+        <a href="/the-market/">Map</a>
+        <a href="/library/">Library</a>
+        <a href="/notes/">Notes</a>
+      </nav>
+      <a class="btn ghost" href="#" id="out">Sign out</a>
+    </div>
+  </header>
+
+  <main class="portal-shell">
+    <div class="wrap">
+      <div class="ident">
+        <div>
+          <p class="kicker"><span class="live-dot"></span>LIVE DESK</p>
+          <h1 id="hello">Welcome</h1>
+          <p class="meta" id="meta"></p>
+        </div>
+        <div class="bell-wrap">
+          <button class="bell" id="bell" type="button">Alerts <b id="badge">0</b></button>
+          <div class="notes-drop" id="drop"></div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:28px">
+        <article class="card pulse" id="week-card">
+          <p class="meta">THIS WEEK</p>
+          <h2 id="week-title">Week</h2>
+          <p id="week-drill"></p>
+          <div class="cta-row">
+            <a class="btn" id="week-note" href="/the-market/">Open the layer</a>
+            <button class="btn ghost" type="button" id="mark-week">Mark drill complete</button>
+          </div>
+        </article>
+        <article class="card">
+          <p class="meta">PRIORITY</p>
+          <h3>What is unfinished</h3>
+          <ul class="list" id="tasks"></ul>
+        </article>
+      </div>
+
+      <section>
+        <p class="kicker">MAP</p>
+        <h2>Eight layers</h2>
+        <div class="map" id="map" style="margin-top:16px"></div>
+      </section>
+
+      <section id="five">
+        <p class="kicker">FIVE-LINE BAR</p>
+        <h2>A decision that can be audited</h2>
+        <form class="five card" id="five-form" style="margin-top:16px">
+          <label>1 · What market, exactly?</label>
+          <input id="f1" />
+          <label>2 · Who is the other side?</label>
+          <input id="f2" />
+          <label>3 · What would change your mind?</label>
+          <input id="f3" />
+          <label>4 · What can you lose, in units?</label>
+          <input id="f4" />
+          <label>5 · Action, or wait?</label>
+          <input id="f5" />
+          <p class="ok" id="five-ok"></p>
+          <button class="btn" type="submit">Save to binder</button>
+        </form>
+      </section>
+
+      <section id="binder">
+        <p class="kicker">BINDER</p>
+        <h2>Written work</h2>
+        <table class="user-table" style="margin-top:16px">
+          <thead><tr><th>When</th><th>Memo</th><th>Status</th></tr></thead>
+          <tbody id="binder-rows"></tbody>
+        </table>
+      </section>
+
+      <section class="grid-2">
+        <article class="card">
+          <h3>Office hours</h3>
+          <p>One question about the layer you are on. Not a ticker.</p>
+          <label>Question</label>
+          <textarea id="hours"></textarea>
+          <button class="btn ghost" type="button" id="hours-btn" style="margin-top:12px">File question</button>
+          <p class="ok" id="hours-ok"></p>
+        </article>
+        <article class="card">
+          <h3>Handouts</h3>
+          <p>The desk standards, as PDFs.</p>
+          <div class="cta-row"><a class="btn" href="/library/">Open library</a></div>
+        </article>
+      </section>
+    </div>
+  </main>
+  <footer><div class="wrap"><p class="legal-mini">Independent educational brand. Not affiliated with Citadel LLC or Citadel Securities. Nothing on this site is investment, trading, or employment advice.</p></div></footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/config.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/desk.js"></script>
+  <script>
+    const me = requireAuth();
+    if (!me) throw new Error("redirect");
+    if (me.role === "admin") {
+      const nav = document.querySelector("nav.links");
+      const a = document.createElement("a");
+      a.href = "/desk/admin/";
+      a.textContent = "Profiles";
+      nav.appendChild(a);
+    }
+    document.getElementById("hello").textContent = me.name;
+    document.getElementById("meta").textContent = me.email + " · " + (me.track || "Foundations of the Market");
+    document.getElementById("out").onclick = async (e) => { e.preventDefault(); await logoutRemote(); location.href = "/login/"; };
+
+    let d = loadDesk(me.email);
+
+    function render() {
+      const w = WEEKS[(d.week || 1) - 1] || WEEKS[0];
+      document.getElementById("week-title").textContent = "Week " + w.n + " · " + w.title;
+      document.getElementById("week-drill").textContent = "Drill: " + w.drill;
+      document.getElementById("week-note").href = w.note;
+      const tasks = priorityTasks(d);
+      document.getElementById("tasks").innerHTML = tasks.length
+        ? tasks.map(t => "<li>"+t.title+" — "+t.body+"</li>").join("")
+        : "<li>No priority tasks. The week is clean.</li>";
+      document.getElementById("map").innerHTML = WEEKS.map(x => {
+        const done = d.done[x.key];
+        const on = x.n === d.week;
+        return `<a class="${done?"done":""} ${on?"on":""}" href="${x.note}"><span>W${x.n}</span>${x.title}</a>`;
+      }).join("");
+      ["f1","f2","f3","f4","f5"].forEach((id,i) => {
+        document.getElementById(id).value = (d.five && d.five["l"+(i+1)]) || "";
+      });
+      document.getElementById("binder-rows").innerHTML = (d.memos||[]).map(m =>
+        `<tr><td>${new Date(m.at).toLocaleString()}</td><td>${m.title}</td><td>${m.status}</td></tr>`
+      ).join("") || `<tr><td colspan="3">Binder empty.</td></tr>`;
+      document.getElementById("hours").value = d.hours || "";
+
+      const alerts = (d.seen||[]).slice(0,8);
+      document.getElementById("badge").textContent = String(tasks.length + (alerts[0] && !alerts[0].read ? 1 : 0));
+      document.getElementById("drop").innerHTML = [
+        ...tasks.map(t => `<div class="note-row"><strong>${t.title}</strong><small>Priority ${t.pri}</small></div>`),
+        ...alerts.map(a => `<div class="note-row">${a.title}<small>${new Date(a.at).toLocaleString()}</small></div>`)
+      ].join("") || `<div class="note-row">Desk is quiet.</div>`;
+    }
+    render();
+
+    document.getElementById("bell").onclick = () => document.getElementById("drop").classList.toggle("open");
+    document.getElementById("mark-week").onclick = () => {
+      const w = WEEKS[(d.week||1)-1];
+      d.done[w.key] = true;
+      if (d.week < 8) d.week += 1;
+      saveDesk(me.email, d);
+      notifyComplete(me.email, w.key, "Week " + w.n + " drill completed — " + w.title);
+      d = loadDesk(me.email);
+      render();
+    };
+    document.getElementById("five-form").onsubmit = (e) => {
+      e.preventDefault();
+      d.five = { l1:f1.value, l2:f2.value, l3:f3.value, l4:f4.value, l5:f5.value };
+      const filled = Object.values(d.five).filter(v => v.trim()).length;
+      d.memos = d.memos || [];
+      d.memos.unshift({ title: (d.five.l1 || "Memo").slice(0,80), status: filled===5 ? "Submitted" : "Draft", at: new Date().toISOString() });
+      saveDesk(me.email, d);
+      if (filled === 5) {
+        notifyComplete(me.email, "five", "Five-line bar completed and filed");
+        d = loadDesk(me.email);
+      }
+      document.getElementById("five-ok").textContent = filled===5 ? "Filed. Priority task complete." : "Saved as draft ("+filled+"/5).";
+      render();
+    };
+    document.getElementById("hours-btn").onclick = () => {
+      d.hours = document.getElementById("hours").value;
+      saveDesk(me.email, d);
+      document.getElementById("hours-ok").textContent = "Filed for office hours.";
+    };
+  </script>
+</body>
+</html>

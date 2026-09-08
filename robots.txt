@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /login/
+Disallow: /desk/
+Disallow: /js/
+Disallow: /server/
+Sitemap: https://kengriffin.courses/sitemap.xml

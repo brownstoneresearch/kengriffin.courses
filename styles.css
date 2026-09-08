@@ -193,3 +193,35 @@ footer a { color: #c9d3e0; }
   font-family: Cinzel, serif;
 }
 .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+
+/* Desk */
+.ident { display:grid; grid-template-columns:1fr auto; gap:18px; align-items:end; margin-bottom:28px; }
+.ident .meta { color:var(--mute); font-size:14px; }
+.bell-wrap { position:relative; }
+.bell {
+  border:1px solid var(--line); background:var(--panel); color:var(--gold-2);
+  padding:10px 14px; cursor:pointer; font-family:Cinzel,serif; font-size:11px; letter-spacing:.16em;
+}
+.bell b { background:var(--gold); color:#081018; border-radius:99px; padding:1px 7px; margin-left:8px; }
+.notes-drop {
+  display:none; position:absolute; right:0; top:110%; width:min(380px,90vw);
+  background:#081421; border:1px solid var(--line); z-index:40; max-height:360px; overflow:auto;
+}
+.notes-drop.open { display:block; }
+.note-row { padding:12px 14px; border-bottom:1px solid var(--line); font-size:14px; }
+.note-row small { display:block; color:var(--mute); font-size:11px; margin-top:4px; }
+.map { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+.map button, .map a {
+  display:block; text-align:left; background:var(--panel); border:1px solid var(--line);
+  color:var(--ivory); padding:14px; font:inherit; cursor:pointer;
+}
+.map .on { border-color:var(--gold); }
+.map .done { color:var(--up); }
+.map span { display:block; font-size:11px; letter-spacing:.14em; color:var(--gold); font-family:Cinzel,serif; }
+.five label { margin-top:8px; }
+.pulse { animation: pulse 2.8s ease-in-out infinite; }
+@keyframes pulse { 50% { box-shadow:0 0 0 6px rgba(196,163,90,.08); } }
+.live-dot { width:8px; height:8px; background:var(--up); border-radius:50%; display:inline-block; margin-right:8px; }
+.passbox { font-family:"IBM Plex Mono",monospace; background:#081421; border:1px solid var(--line); padding:12px; word-break:break-all; }
+.dl-row { display:flex; justify-content:space-between; gap:12px; align-items:center; padding:14px 0; border-bottom:1px solid var(--line); }
+@media (max-width:900px){ .map, .ident { grid-template-columns:1fr; } }

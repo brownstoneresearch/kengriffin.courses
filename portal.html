@@ -2,81 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Desk | Ken Cordele Griffin Academy</title>
-  <link rel="icon" href="assets/crest.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <meta http-equiv="refresh" content="0;url=/desk/" />
+  <link rel="canonical" href="https://kengriffin.courses/desk/" />
+  <title>Moved</title>
+  <script>location.replace("/desk/");</script>
 </head>
-<body>
-  <header>
-    <div class="wrap nav">
-      <a class="brand" href="index.html">
-        <img src="assets/crest.png" alt="" />
-        <div><strong>KEN CORDELE GRIFFIN</strong><em>ACADEMY</em></div>
-      </a>
-      <nav class="links">
-        <a class="active" href="portal.html">Desk</a>
-        <a href="markets.html">The Market</a>
-        <a href="library.html">Notes</a>
-        <a href="foundations.html">Foundations</a>
-      </nav>
-      <a class="btn ghost" href="#" id="out">Sign out</a>
-    </div>
-  </header>
-
-  <main class="portal-shell">
-    <div class="wrap">
-      <div class="toolbar">
-        <div>
-          <p class="kicker">PARTICIPANT DESK</p>
-          <h1 id="hello">Welcome</h1>
-          <p class="lede" id="meta"></p>
-        </div>
-        <span class="pill" id="role"></span>
-      </div>
-      <div class="grid-3">
-        <article class="card">
-          <h3>This week</h3>
-          <p>Open the market map, then write the drill for your current week. Work is not complete until it survives the five-line bar.</p>
-          <div class="cta-row"><a class="btn" href="markets.html">Market map</a></div>
-        </article>
-        <article class="card">
-          <h3>Term</h3>
-          <p id="track"></p>
-          <div class="cta-row"><a class="btn ghost" href="foundations.html">Syllabus</a></div>
-        </article>
-        <article class="card">
-          <h3>Notes</h3>
-          <p>Structure, liquidity, risk, information, plumbing — one page each.</p>
-          <div class="cta-row"><a class="btn ghost" href="library.html">Desk notes</a></div>
-        </article>
-      </div>
-    </div>
-  </main>
-  <footer>
-    <div class="wrap">
-      <p class="legal-mini">Independent educational brand. Not affiliated with, endorsed by, or part of Citadel LLC or Citadel Securities. Nothing on this site is investment, trading, or employment advice.</p>
-    </div>
-  </footer>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/config.js"></script>
-  <script src="js/auth.js"></script>
-  <script>
-    const me = requireAuth();
-    if (!me) throw new Error("redirect");
-    document.getElementById("hello").textContent = me.name;
-    document.getElementById("meta").textContent = me.email;
-    document.getElementById("role").textContent = me.role;
-    document.getElementById("track").textContent = me.track || "Foundations of the Market";
-    document.getElementById("out").onclick = async (e) => { e.preventDefault(); await logoutRemote(); location.href = "login.html"; };
-    if (me.role === "admin") {
-      const nav = document.querySelector("nav.links");
-      const a = document.createElement("a");
-      a.href = "admin.html";
-      a.textContent = "Profiles";
-      nav.appendChild(a);
-    }
-  </script>
-</body>
+<body><p><a href="/desk/">Continue</a></p></body>
 </html>

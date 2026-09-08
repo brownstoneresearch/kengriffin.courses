@@ -2,66 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Portal | Ken Cordele Griffin Academy</title>
-  <link rel="icon" href="assets/crest.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <meta http-equiv="refresh" content="0;url=/login/" />
+  <link rel="canonical" href="https://kengriffin.courses/login/" />
+  <title>Moved</title>
+  <script>location.replace("/login/");</script>
 </head>
-<body>
-  <header>
-    <div class="wrap nav">
-      <a class="brand" href="index.html">
-        <img src="assets/crest.png" alt="" />
-        <div><strong>KEN CORDELE GRIFFIN</strong><em>ACADEMY</em></div>
-      </a>
-      <nav class="links">
-        <a href="index.html">Home</a>
-        <a href="markets.html">The Market</a>
-        <a class="active" href="login.html">Portal</a>
-      </nav>
-      <a class="btn ghost" href="index.html">Public site</a>
-    </div>
-  </header>
-
-  <main class="portal-shell">
-    <div class="wrap">
-      <div class="auth-card" id="login-card">
-        <p class="kicker">PORTAL</p>
-        <h1>Sign in</h1>
-        <p class="lede" style="font-size:16px;margin-bottom:22px">Sign in with your issued profile. Administrators: ceo@kengriffin.courses and admissions@kengriffin.courses. There is no public registration and no admin setup on this page.</p>
-        <form id="login-form">
-          <label>Email</label>
-          <input type="email" id="email" required autocomplete="username" />
-          <label>Password</label>
-          <input type="password" id="password" required autocomplete="current-password" />
-          <p class="err" id="login-err"></p>
-          <button class="btn" type="submit">Enter</button>
-        </form>
-      </div>
-
-      
-    </div>
-  </main>
-
-  <footer>
-    <div class="wrap">
-      <p class="legal-mini">Independent educational brand. Not affiliated with, endorsed by, or part of Citadel LLC or Citadel Securities. Nothing on this site is investment, trading, or employment advice. This portal stores profiles in this browser until a server is connected.</p>
-    </div>
-  </footer>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/config.js"></script>
-  <script src="js/auth.js"></script>
-  <script>
-    document.getElementById("login-form").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const err = document.getElementById("login-err");
-      err.textContent = "";
-      try {
-        const s = await login(document.getElementById("email").value, document.getElementById("password").value);
-        location.href = s.role === "admin" ? "admin.html" : "portal.html";
-      } catch (ex) { err.textContent = ex.message; }
-    });
-  </script>
-</body>
+<body><p><a href="/login/">Continue</a></p></body>
 </html>

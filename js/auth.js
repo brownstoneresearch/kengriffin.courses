@@ -138,9 +138,9 @@ async function logoutRemote() {
 
 function requireAuth(role) {
   const s = session();
-  if (!s) { location.href = "login.html"; return null; }
+  if (!s) { location.href = "/login/"; return null; }
   if (role && s.role !== role) {
-    location.href = s.role === "admin" ? "admin.html" : "portal.html";
+    location.href = s.role === "admin" ? "/desk/admin/" : "/desk/";
     return null;
   }
   return s;

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Portal | Ken Cordele Griffin Academy</title>
+  <meta name="description" content="Sign in to the Ken Cordele Griffin Academy desk. Profiles are issued by the administrator." />
+  <link rel="canonical" href="https://kengriffin.courses/login/" />
+  <meta name="robots" content="noindex,nofollow" />
+  <link rel="icon" href="/assets/crest.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="/">
+        <img src="/assets/crest.png" alt="" />
+        <div><strong>KEN CORDELE GRIFFIN</strong><em>ACADEMY</em></div>
+      </a>
+      <a class="btn ghost" href="/">Public site</a>
+    </div>
+  </header>
+  <main class="portal-shell">
+    <div class="wrap">
+      <div class="auth-card">
+        <p class="kicker"><span class="live-dot"></span>PORTAL</p>
+        <h1>Sign in</h1>
+        <p class="lede" style="font-size:16px;margin-bottom:22px">Administrators: ceo@kengriffin.courses and admissions@kengriffin.courses. Participants use the issued email and system-generated password. No public registration.</p>
+        <form id="login-form">
+          <label>Email</label>
+          <input type="email" id="email" required autocomplete="username" />
+          <label>Password</label>
+          <input type="password" id="password" required autocomplete="current-password" />
+          <p class="err" id="login-err"></p>
+          <button class="btn" type="submit">Enter the desk</button>
+        </form>
+      </div>
+    </div>
+  </main>
+  <footer><div class="wrap"><p class="legal-mini">Independent educational brand. Not affiliated with Citadel LLC or Citadel Securities. Not investment advice.</p></div></footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/config.js"></script>
+  <script src="/js/auth.js"></script>
+  <script>
+    document.getElementById("login-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const err = document.getElementById("login-err");
+      err.textContent = "";
+      try {
+        const s = await login(document.getElementById("email").value, document.getElementById("password").value);
+        location.href = s.role === "admin" ? "/desk/admin/" : "/desk/";
+      } catch (ex) { err.textContent = ex.message; }
+    });
+  </script>
+</body>
+</html>
