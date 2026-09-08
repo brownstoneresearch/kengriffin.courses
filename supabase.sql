@@ -8,8 +8,13 @@ create table if not exists public.profiles (
   track text,
   active boolean not null default true,
   created_by text,
-  created_at timestamptz not null default now()
+  created_at timestamptz not null default now(),
+  week int default 1,
+  admin_notes text
 );
+
+alter table public.profiles add column if not exists week int default 1;
+alter table public.profiles add column if not exists admin_notes text;
 
 alter table public.profiles enable row level security;
 

@@ -8,7 +8,7 @@ async function sendInviteMail(payload) {
   });
 
   if (cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY) {
-    const r = await fetch(cfg.SUPABASE_URL + "/functions/v1/send-invite", {
+    const r = await fetch(cfg.SUPABASE_URL + "/functions/v1/send-email", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -21,7 +21,24 @@ async function sendInviteMail(payload) {
     let j = {};
     try { j = JSON.parse(text); } catch { j = { error: text }; }
     if (r.ok && j.ok) return { ok: true, via: "supabase", id: j.id };
-    if (r.status !== 404) return { ok: false, error: j.error || j.message || text || "function error" };
+    if (r.status === 404) {
+      const r2 = await fetch(cfg.SUPABASE_URL + "/functions/v1/send-invite", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + cfg.SUPABASE_ANON_KEY,
+          apikey: cfg.SUPABASE_ANON_KEY
+        },
+        body
+      });
+      const t2 = await r2.text();
+      let j2 = {};
+      try { j2 = JSON.parse(t2); } catch { j2 = { error: t2 }; }
+      if (r2.ok && j2.ok) return { ok: true, via: "supabase-invite", id: j2.id };
+      if (r2.status !== 404) return { ok: false, error: j2.error || t2 };
+    } else {
+      return { ok: false, error: j.error || j.message || text || "function error" };
+    }
   }
 
   try {

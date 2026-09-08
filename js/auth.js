@@ -155,7 +155,8 @@ async function listProfiles() {
   if (client) {
     const { data, error } = await client.from("profiles").select("*").order("created_at", { ascending: false });
     if (!error && data) return data.map(p => ({
-      id: p.id, name: p.name, email: p.email, role: p.role, track: p.track, active: p.active !== false
+      id: p.id, name: p.name, email: p.email, role: p.role, track: p.track,
+      active: p.active !== false, week: p.week, notes: p.admin_notes, created_at: p.created_at
     }));
   }
   return loadUsers();
@@ -167,4 +168,46 @@ async function setActive(id, active) {
   const all = loadUsers();
   const t = all.find(x => x.id === id);
   if (t) { t.active = active; saveUsers(all); }
+}
+
+async function updateProfile(id, fields) {
+  const client = db();
+  const patch = {};
+  if (fields.name != null) patch.name = fields.name;
+  if (fields.track != null) patch.track = fields.track;
+  if (fields.week != null) patch.week = fields.week;
+  if (fields.notes != null) patch.admin_notes = fields.notes;
+  if (fields.active != null) patch.active = fields.active;
+  if (client && Object.keys(patch).length) await client.from("profiles").update(patch).eq("id", id);
+  const all = loadUsers();
+  const t = all.find(x => x.id === id);
+  if (t) { Object.assign(t, fields); saveUsers(all); }
+  const s = session();
+  if (s && s.id === id) setSession({ ...s, ...fields });
+}
+
+async function changePassword(currentPassword, nextPassword) {
+  if (!nextPassword || nextPassword.length < 8) throw new Error("New password must be at least 8 characters.");
+  const s = session();
+  if (!s) throw new Error("Sign in first.");
+  const client = db();
+  if (client) {
+    const { error } = await client.auth.updateUser({ password: nextPassword });
+    if (error) throw new Error(error.message);
+    return true;
+  }
+  const all = loadUsers();
+  const t = all.find(x => x.email === s.email);
+  if (!t) throw new Error("Profile not found.");
+  if (t.hash && t.hash !== await sha(currentPassword)) throw new Error("Current password does not match.");
+  t.hash = await sha(nextPassword);
+  saveUsers(all);
+  return true;
+}
+
+async function resetLocalPassword(id, nextPassword) {
+  const all = loadUsers();
+  const t = all.find(x => x.id === id);
+  if (t) { t.hash = await sha(nextPassword); saveUsers(all); }
+  return nextPassword;
 }

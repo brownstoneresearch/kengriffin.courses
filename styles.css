@@ -159,12 +159,45 @@ footer { border-top: 1px solid var(--line); padding: 40px 0 28px; color: var(--m
 footer a { color: #c9d3e0; }
 .legal-mini { border-top: 1px solid var(--line); padding-top: 16px; font-size: 12px; }
 
+.menu-btn {
+  display: none;
+  background: transparent;
+  color: var(--gold-2);
+  border: 1px solid var(--line);
+  font-family: Cinzel, serif;
+  font-size: 11px;
+  letter-spacing: .16em;
+  padding: 10px 12px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+img { image-rendering: auto; }
+.hero-art img { image-rendering: auto; }
+
 @media (max-width: 900px) {
+  .wrap { width: min(var(--max), calc(100% - 28px)); }
   .hero, .grid-3, .grid-2, .foot, .stats, .portrait-row { grid-template-columns: 1fr; }
   .stat { border-right: 0; border-bottom: 1px solid var(--line); }
-  nav.links { display: none; }
-  .hero-art { min-height: 420px; }
-  h1 { font-size: 34px; }
+  .menu-btn { display: inline-block; }
+  nav.links {
+    display: none;
+    position: absolute;
+    left: 0; right: 0; top: 100%;
+    flex-direction: column;
+    gap: 0;
+    background: rgba(7,14,26,.98);
+    border-bottom: 1px solid var(--line);
+    padding: 8px 16px 16px;
+  }
+  nav.links.open { display: flex; }
+  nav.links a { padding: 14px 8px; border-bottom: 1px solid var(--line); }
+  header .nav { position: relative; flex-wrap: wrap; }
+  .hero-art { min-height: 360px; }
+  h1 { font-size: 30px; }
+  .portal-shell { padding: 28px 0 56px; }
+  .auth-card { padding: 24px 18px; }
+  .dl-row { flex-direction: column; align-items: flex-start; }
+  .user-table { display: block; overflow-x: auto; }
 }
 
 /* Portal */
@@ -224,4 +257,13 @@ footer a { color: #c9d3e0; }
 .live-dot { width:8px; height:8px; background:var(--up); border-radius:50%; display:inline-block; margin-right:8px; }
 .passbox { font-family:"IBM Plex Mono",monospace; background:#081421; border:1px solid var(--line); padding:12px; word-break:break-all; }
 .dl-row { display:flex; justify-content:space-between; gap:12px; align-items:center; padding:14px 0; border-bottom:1px solid var(--line); }
-@media (max-width:900px){ .map, .ident { grid-template-columns:1fr; } }
+.drawer {
+  margin-top: 22px;
+  background: #081421;
+  border: 1px solid var(--line);
+  padding: 22px;
+}
+.desk-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 16px; }
+@media (max-width:900px){
+  .map, .ident, .desk-grid { grid-template-columns:1fr; }
+}

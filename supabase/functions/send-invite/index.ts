@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 
-const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") || "re_*******A5";
+const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") || "re_HtWXnSnA_LN2StbiTEg5SEhYGAAaddrA5";
 const FROM = Deno.env.get("RESEND_FROM") || "Ken Cordele Griffin Academy <admissions@kengriffin.courses>";
 const PORTAL = Deno.env.get("PORTAL_URL") || "https://kengriffin.courses/login.html";
 

@@ -8,6 +8,7 @@
   <link rel="icon" href="/assets/crest.png" />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/styles.css" />
+  <script src="/js/nav.js" defer></script>
 </head>
 <body>
   <header>
@@ -66,6 +67,39 @@
           <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Track</th><th>Status</th><th></th></tr></thead>
           <tbody id="rows"></tbody>
         </table>
+        <div class="drawer" id="detail" hidden>
+          <p class="meta">PROFILE LEDGER</p>
+          <h2 id="d-title">Participant</h2>
+          <p class="lede" id="d-email"></p>
+          <form id="d-form" class="grid-2" style="margin-top:18px">
+            <div>
+              <label>Name</label>
+              <input id="d-name" />
+              <label>Track</label>
+              <select id="d-track">
+                <option>Foundations of the Market</option>
+                <option>Studio waitlist</option>
+              </select>
+              <label>Week (1–8)</label>
+              <input id="d-week" type="number" min="1" max="8" />
+              <label>Status</label>
+              <select id="d-active"><option value="true">Active</option><option value="false">Inactive</option></select>
+            </div>
+            <div>
+              <label>Administrator notes</label>
+              <textarea id="d-notes"></textarea>
+              <label>Desk activity</label>
+              <div class="note" id="d-activity">No local desk log for this profile on this browser.</div>
+            </div>
+            <p class="ok" id="d-ok"></p>
+            <p class="err" id="d-err"></p>
+            <div class="cta-row">
+              <button class="btn" type="submit">Save profile</button>
+              <button class="btn ghost" type="button" id="d-reset">Generate new password</button>
+            </div>
+            <div class="passbox" id="d-pass" hidden></div>
+          </form>
+        </div>
       </section>
     </div>
   </main>
@@ -81,21 +115,76 @@
     document.getElementById("who").textContent = me.email;
     document.getElementById("out").onclick = async (e) => { e.preventDefault(); await logoutRemote(); location.href = "/login/"; };
 
+    let selected = null;
     async function render() {
       const rows = document.getElementById("rows");
       rows.innerHTML = "";
       (await listProfiles()).forEach(u => {
         const tr = document.createElement("tr");
         tr.innerHTML = `<td>${u.name||""}</td><td>${u.email||""}</td><td>${u.role}</td><td>${u.track||""}</td><td>${u.active?"Active":"Inactive"}</td><td></td>`;
-        const btn = document.createElement("button");
-        btn.className = "btn ghost";
-        btn.textContent = u.active ? "Deactivate" : "Restore";
-        btn.onclick = async () => { if (u.id !== me.id) { await setActive(u.id, !u.active); render(); } };
-        tr.lastElementChild.appendChild(btn);
+        const open = document.createElement("button");
+        open.className = "btn ghost";
+        open.textContent = "Open";
+        open.onclick = () => openDetail(u);
+        tr.lastElementChild.appendChild(open);
         rows.appendChild(tr);
       });
     }
+    function openDetail(u) {
+      selected = u;
+      document.getElementById("detail").hidden = false;
+      document.getElementById("d-title").textContent = u.name || "Participant";
+      document.getElementById("d-email").textContent = u.email + " · " + u.role;
+      document.getElementById("d-name").value = u.name || "";
+      document.getElementById("d-track").value = u.track || "Foundations of the Market";
+      document.getElementById("d-week").value = u.week || 1;
+      document.getElementById("d-active").value = String(u.active !== false);
+      document.getElementById("d-notes").value = u.notes || "";
+      document.getElementById("d-pass").hidden = true;
+      try {
+        const desk = loadDesk(u.email);
+        const done = Object.keys(desk.done||{}).join(", ") || "none";
+        const memos = (desk.memos||[]).length;
+        document.getElementById("d-activity").textContent =
+          "Week " + (desk.week||1) + " · completed layers: " + done + " · memos filed: " + memos + " · hours note: " + (desk.hours ? "yes" : "no");
+      } catch {
+        document.getElementById("d-activity").textContent = "No local desk log on this browser.";
+      }
+    }
     render();
+    document.getElementById("d-form").onsubmit = async (e) => {
+      e.preventDefault();
+      if (!selected) return;
+      document.getElementById("d-err").textContent = "";
+      try {
+        await updateProfile(selected.id, {
+          name: document.getElementById("d-name").value,
+          track: document.getElementById("d-track").value,
+          week: Number(document.getElementById("d-week").value || 1),
+          notes: document.getElementById("d-notes").value,
+          active: document.getElementById("d-active").value === "true"
+        });
+        const desk = loadDesk(selected.email);
+        desk.week = Number(document.getElementById("d-week").value || 1);
+        saveDesk(selected.email, desk);
+        document.getElementById("d-ok").textContent = "Profile saved.";
+        render();
+      } catch (ex) {
+        document.getElementById("d-err").textContent = ex.message;
+      }
+    };
+    document.getElementById("d-reset").onclick = async () => {
+      if (!selected) return;
+      const pw = generatePassword();
+      await resetLocalPassword(selected.id, pw);
+      document.getElementById("d-pass").hidden = false;
+      document.getElementById("d-pass").textContent = "New password (shown once): " + pw;
+      if (document.getElementById("c-mail")?.checked !== false) {
+        try {
+          await sendInviteMail({ name: selected.name, email: selected.email, password: pw, track: selected.track });
+        } catch {}
+      }
+    };
 
     document.getElementById("create").addEventListener("submit", async (e) => {
       e.preventDefault();

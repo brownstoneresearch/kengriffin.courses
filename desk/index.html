@@ -9,6 +9,7 @@
   <link rel="icon" href="/assets/crest.png" />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/styles.css" />
+  <script src="/js/nav.js" defer></script>
 </head>
 <body>
   <header>
@@ -107,6 +108,30 @@
           <div class="cta-row"><a class="btn" href="/library/">Open library</a></div>
         </article>
       </section>
+
+      <section class="desk-grid" id="account">
+        <article class="card">
+          <p class="meta">ACCOUNT</p>
+          <h3>Change password</h3>
+          <form id="pw-form">
+            <label>Current password</label>
+            <input type="password" id="pw-now" autocomplete="current-password" />
+            <label>New password</label>
+            <input type="password" id="pw-next" minlength="8" required autocomplete="new-password" />
+            <label>Confirm new password</label>
+            <input type="password" id="pw-next2" minlength="8" required autocomplete="new-password" />
+            <p class="err" id="pw-err"></p>
+            <p class="ok" id="pw-ok"></p>
+            <button class="btn" type="submit">Update password</button>
+          </form>
+        </article>
+        <article class="card">
+          <p class="meta">SESSION</p>
+          <h3>This profile</h3>
+          <p id="acct-line"></p>
+          <p class="note" style="margin-top:14px">Role cannot be changed here. Only ceo@ and admissions@ govern profiles.</p>
+        </article>
+      </section>
     </div>
   </main>
   <footer><div class="wrap"><p class="legal-mini">Independent educational brand. Not affiliated with Citadel LLC or Citadel Securities. Nothing on this site is investment, trading, or employment advice.</p></div></footer>
@@ -189,6 +214,22 @@
       d.hours = document.getElementById("hours").value;
       saveDesk(me.email, d);
       document.getElementById("hours-ok").textContent = "Filed for office hours.";
+    };
+    document.getElementById("acct-line").textContent = me.name + " · " + me.email + " · " + me.role;
+    document.getElementById("pw-form").onsubmit = async (e) => {
+      e.preventDefault();
+      document.getElementById("pw-err").textContent = "";
+      document.getElementById("pw-ok").textContent = "";
+      const a = document.getElementById("pw-next").value;
+      const b = document.getElementById("pw-next2").value;
+      if (a !== b) { document.getElementById("pw-err").textContent = "New passwords do not match."; return; }
+      try {
+        await changePassword(document.getElementById("pw-now").value, a);
+        document.getElementById("pw-ok").textContent = "Password updated.";
+        document.getElementById("pw-form").reset();
+      } catch (ex) {
+        document.getElementById("pw-err").textContent = ex.message;
+      }
     };
   </script>
 </body>
