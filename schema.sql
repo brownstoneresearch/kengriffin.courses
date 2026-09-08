@@ -209,3 +209,44 @@ create policy "notes_update" on public.notifications
 create policy "notes_delete" on public.notifications
   for delete to authenticated
   using ((select auth.uid()) = user_id or public.is_academy_admin());
+
+-- ---------------------------------------------------------------------------
+-- insights  (admin posts; registered profiles read)
+-- ---------------------------------------------------------------------------
+create table if not exists public.insights (
+  id          uuid primary key default gen_random_uuid(),
+  title       text not null,
+  layer       text not null default 'The market',
+  body        text not null,
+  author      text,
+  created_at  timestamptz not null default now()
+);
+
+create index if not exists insights_created_at_idx on public.insights (created_at desc);
+
+alter table public.insights enable row level security;
+revoke all on public.insights from anon, public;
+grant select on public.insights to authenticated;
+grant insert, update, delete on public.insights to authenticated;
+
+drop policy if exists "insights_select" on public.insights;
+drop policy if exists "insights_insert" on public.insights;
+drop policy if exists "insights_update" on public.insights;
+drop policy if exists "insights_delete" on public.insights;
+
+create policy "insights_select" on public.insights
+  for select to authenticated
+  using (true);
+
+create policy "insights_insert" on public.insights
+  for insert to authenticated
+  with check (public.is_academy_admin());
+
+create policy "insights_update" on public.insights
+  for update to authenticated
+  using (public.is_academy_admin())
+  with check (public.is_academy_admin());
+
+create policy "insights_delete" on public.insights
+  for delete to authenticated
+  using (public.is_academy_admin());

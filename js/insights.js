@@ -1,31 +1,71 @@
 const INSIGHTS = "kcga.insights.v1";
 
-function loadInsights() {
+function mapInsight(row) {
+  return {
+    id: row.id,
+    title: row.title,
+    layer: row.layer,
+    body: row.body,
+    author: row.author,
+    at: row.at || row.created_at
+  };
+}
+
+function cacheInsights(rows) {
+  localStorage.setItem(INSIGHTS, JSON.stringify(rows));
+}
+function cachedInsights() {
   try { return JSON.parse(localStorage.getItem(INSIGHTS) || "[]"); }
   catch { return []; }
 }
-function saveInsights(rows) {
-  localStorage.setItem(INSIGHTS, JSON.stringify(rows));
+
+async function loadInsights() {
+  const client = typeof db === "function" ? db() : null;
+  if (client) {
+    const { data, error } = await client
+      .from("insights")
+      .select("id,title,layer,body,author,created_at")
+      .order("created_at", { ascending: false })
+      .limit(80);
+    if (!error && data) {
+      const rows = data.map(r => mapInsight({ ...r, at: r.created_at }));
+      cacheInsights(rows);
+      return rows;
+    }
+  }
+  return cachedInsights();
 }
-function publishInsight({ title, layer, body, author }) {
+
+async function publishInsight({ title, layer, body, author }) {
   const titleC = String(title || "").trim();
   const bodyC = String(body || "").trim();
   if (!titleC || !bodyC) throw new Error("Title and body are required.");
-  const row = {
-    id: "in_" + Date.now().toString(36),
+  const payload = {
     title: titleC,
     layer: String(layer || "The market"),
     body: bodyC,
-    author: author || "Desk",
-    at: new Date().toISOString()
+    author: author || "Desk"
   };
-  const all = loadInsights();
-  all.unshift(row);
-  saveInsights(all.slice(0, 80));
+  const client = typeof db === "function" ? db() : null;
+  if (client) {
+    const { data, error } = await client.from("insights").insert(payload).select().single();
+    if (error) throw new Error(error.message);
+    const row = mapInsight({ ...data, at: data.created_at });
+    cacheInsights([row, ...cachedInsights().filter(x => x.id !== row.id)]);
+    return row;
+  }
+  const row = { id: "in_" + Date.now().toString(36), ...payload, at: new Date().toISOString() };
+  cacheInsights([row, ...cachedInsights()].slice(0, 80));
   return row;
 }
-function removeInsight(id) {
-  saveInsights(loadInsights().filter(x => x.id !== id));
+
+async function removeInsight(id) {
+  const client = typeof db === "function" ? db() : null;
+  if (client) {
+    const { error } = await client.from("insights").delete().eq("id", id);
+    if (error) throw new Error(error.message);
+  }
+  cacheInsights(cachedInsights().filter(x => x.id !== id));
 }
 
 const HANDOUTS = [

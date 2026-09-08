@@ -230,9 +230,11 @@
       saveDesk(me.email, d);
       document.getElementById("hours-ok").textContent = "Filed for office hours.";
     };
-    document.getElementById("insight-list").innerHTML = loadInsights().length
-      ? loadInsights().map(x => `<article class="insight"><p class="meta">${x.layer}</p><h3>${x.title}</h3><p>${x.body}</p><p class="when">${new Date(x.at).toLocaleString()} · ${x.author}</p></article>`).join("")
-      : `<article class="insight"><h3>No insight on the wire yet.</h3><p>When the administrator posts, it appears here — not on the public site.</p></article>`;
+    loadInsights().then(rows => {
+      document.getElementById("insight-list").innerHTML = rows.length
+        ? rows.map(x => `<article class="insight"><p class="meta">${x.layer}</p><h3>${x.title}</h3><p>${x.body}</p><p class="when">${new Date(x.at).toLocaleString()} · ${x.author || ""}</p></article>`).join("")
+        : `<article class="insight"><h3>No insight on the wire yet.</h3><p>When the administrator posts, it appears here — not on the public site.</p></article>`;
+    });
     document.getElementById("vault-list").innerHTML = HANDOUTS.map(h =>
       `<div class="dl-row"><div><h3>${h.title}</h3><p>${h.blurb}</p></div><a class="btn ghost" href="/desk/files/${h.file}" download>Download</a></div>`
     ).join("");
