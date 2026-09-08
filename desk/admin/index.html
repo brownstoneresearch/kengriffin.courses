@@ -19,6 +19,7 @@
       </a>
       <nav class="links">
         <a class="active" href="/desk/admin/">Profiles</a>
+        <a href="/desk/admin/#insights-desk">Insights</a>
         <a href="/desk/">Desk</a>
       </nav>
       <a class="btn ghost" href="#" id="out">Sign out</a>
@@ -34,6 +35,33 @@
         </div>
         <span class="pill" id="who"></span>
       </div>
+      <section id="insights-desk" style="margin-bottom:36px">
+        <p class="kicker">INSIGHTS</p>
+        <h2>Post to the participant desk</h2>
+        <p class="lede">Only issued profiles see this. The public site does not.</p>
+        <form id="insight-form" class="card" style="margin-top:16px">
+          <label>Layer</label>
+          <select id="i-layer">
+            <option>The market</option>
+            <option>Structure</option>
+            <option>Participants</option>
+            <option>Instruments</option>
+            <option>The book</option>
+            <option>Liquidity</option>
+            <option>Risk</option>
+            <option>Information</option>
+            <option>Plumbing</option>
+          </select>
+          <label>Title</label>
+          <input id="i-title" required />
+          <label>Insight</label>
+          <textarea id="i-body" required></textarea>
+          <p class="ok" id="i-ok"></p>
+          <p class="err" id="i-err"></p>
+          <button class="btn" type="submit">Publish to the desk</button>
+        </form>
+        <div class="insight-stack" id="insight-admin-list" style="margin-top:18px"></div>
+      </section>
       <div class="grid-2">
         <form id="create" class="card">
           <h3>New participant</h3>
@@ -108,8 +136,18 @@
   <script src="/js/config.js"></script>
   <script src="/js/auth.js"></script>
   <script src="/js/desk.js"></script>
+  <script src="/js/insights.js"></script>
   <script src="/js/mail.js"></script>
   <script>
+    function drawInsights() {
+      const rows = loadInsights();
+      document.getElementById("insight-admin-list").innerHTML = rows.length
+        ? rows.map(x => `<article class="insight"><p class="meta">${x.layer}</p><h3>${x.title}</h3><p>${x.body}</p><p class="when">${new Date(x.at).toLocaleString()}</p><button class="btn ghost" data-del="${x.id}" type="button">Remove</button></article>`).join("")
+        : `<p class="note">No insights posted.</p>`;
+      document.querySelectorAll("[data-del]").forEach(btn => {
+        btn.onclick = () => { removeInsight(btn.getAttribute("data-del")); drawInsights(); };
+      });
+    }
     const me = requireAuth("admin");
     if (!me) throw new Error("redirect");
     document.getElementById("who").textContent = me.email;
@@ -152,6 +190,25 @@
       }
     }
     render();
+    drawInsights();
+    document.getElementById("insight-form").onsubmit = (e) => {
+      e.preventDefault();
+      document.getElementById("i-err").textContent = "";
+      try {
+        publishInsight({
+          title: document.getElementById("i-title").value,
+          layer: document.getElementById("i-layer").value,
+          body: document.getElementById("i-body").value,
+          author: me.email
+        });
+        document.getElementById("i-ok").textContent = "Posted to the participant desk.";
+        document.getElementById("i-title").value = "";
+        document.getElementById("i-body").value = "";
+        drawInsights();
+      } catch (ex) {
+        document.getElementById("i-err").textContent = ex.message;
+      }
+    };
     document.getElementById("d-form").onsubmit = async (e) => {
       e.preventDefault();
       if (!selected) return;

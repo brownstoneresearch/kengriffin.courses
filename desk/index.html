@@ -20,9 +20,9 @@
       </a>
       <nav class="links">
         <a class="active" href="/desk/">Desk</a>
+        <a href="#insights">Insights</a>
+        <a href="#vault">Library</a>
         <a href="/the-market/">Map</a>
-        <a href="/library/">Library</a>
-        <a href="/notes/">Notes</a>
       </nav>
       <a class="btn ghost" href="#" id="out">Sign out</a>
     </div>
@@ -41,6 +41,20 @@
           <div class="notes-drop" id="drop"></div>
         </div>
       </div>
+
+      <nav class="desk-tabs">
+        <a class="on" href="#insights">Insights</a>
+        <a href="#week-card">This week</a>
+        <a href="#vault">Library</a>
+        <a href="#five">Five-line</a>
+        <a href="#account">Account</a>
+      </nav>
+
+      <section id="insights" style="margin-bottom:32px">
+        <p class="kicker">DESK INSIGHTS</p>
+        <h2>Posted by the administrator</h2>
+        <div class="insight-stack" id="insight-list" style="margin-top:16px"></div>
+      </section>
 
       <div class="grid-2" style="margin-bottom:28px">
         <article class="card pulse" id="week-card">
@@ -102,10 +116,10 @@
           <button class="btn ghost" type="button" id="hours-btn" style="margin-top:12px">File question</button>
           <p class="ok" id="hours-ok"></p>
         </article>
-        <article class="card">
-          <h3>Handouts</h3>
-          <p>The desk standards, as PDFs.</p>
-          <div class="cta-row"><a class="btn" href="/library/">Open library</a></div>
+        <article class="card" id="vault">
+          <h3>Library</h3>
+          <p>Registered profiles only. Files sit on the desk, not the public site.</p>
+          <div id="vault-list"></div>
         </article>
       </section>
 
@@ -139,6 +153,7 @@
   <script src="/js/config.js"></script>
   <script src="/js/auth.js"></script>
   <script src="/js/desk.js"></script>
+  <script src="/js/insights.js"></script>
   <script>
     const me = requireAuth();
     if (!me) throw new Error("redirect");
@@ -215,6 +230,12 @@
       saveDesk(me.email, d);
       document.getElementById("hours-ok").textContent = "Filed for office hours.";
     };
+    document.getElementById("insight-list").innerHTML = loadInsights().length
+      ? loadInsights().map(x => `<article class="insight"><p class="meta">${x.layer}</p><h3>${x.title}</h3><p>${x.body}</p><p class="when">${new Date(x.at).toLocaleString()} · ${x.author}</p></article>`).join("")
+      : `<article class="insight"><h3>No insight on the wire yet.</h3><p>When the administrator posts, it appears here — not on the public site.</p></article>`;
+    document.getElementById("vault-list").innerHTML = HANDOUTS.map(h =>
+      `<div class="dl-row"><div><h3>${h.title}</h3><p>${h.blurb}</p></div><a class="btn ghost" href="/desk/files/${h.file}" download>Download</a></div>`
+    ).join("");
     document.getElementById("acct-line").textContent = me.name + " · " + me.email + " · " + me.role;
     document.getElementById("pw-form").onsubmit = async (e) => {
       e.preventDefault();

@@ -2,6 +2,7 @@ User-agent: *
 Allow: /
 Disallow: /login/
 Disallow: /desk/
+Disallow: /desk/files/
 Disallow: /js/
 Disallow: /server/
 Sitemap: https://kengriffin.courses/sitemap.xml
