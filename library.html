@@ -3,57 +3,80 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Library | Ken Cordele Griffin Academy</title>
+  <title>Notes | Ken Cordele Griffin Academy</title>
+  <meta name="description" content="Desk notes on structure, liquidity, risk, information, and plumbing." />
   <link rel="icon" href="assets/crest.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <b>KCGA</b> THE MARKET ONLY <b>STRUCTURE</b> <b>LIQUIDITY</b> <b>RISK</b> <b>INFORMATION</b> <b>PLUMBING</b> EDUCATION · NOT ADVICE
+      <b>KCGA</b> THE MARKET ONLY <b>STRUCTURE</b> <b>LIQUIDITY</b> <b>RISK</b> <b>INFORMATION</b> <b>PLUMBING</b> EDUCATION · NOT ADVICE
+    </div>
+  </div>
   <header>
     <div class="wrap nav">
-      <a class="brand" href="index.html"><img src="assets/crest.png" alt="" /><div><strong>KEN CORDELE GRIFFIN</strong><span>ACADEMY</span></div></a>
+      <a class="brand" href="index.html">
+        <img src="assets/crest.png" alt="Crest" />
+        <div><strong>KEN CORDELE GRIFFIN</strong><em>ACADEMY</em></div>
+      </a>
       <nav class="links">
         <a href="index.html">Home</a>
-        <a href="academy.html">Academy</a>
-        <a href="courses.html">Courses</a>
+        <a href="markets.html">The Market</a>
+        <a href="courses.html">Curriculum</a>
         <a href="method.html">Method</a>
-        <a class="active" href="library.html">Library</a>
+        <a href="library.html" class="active">Notes</a>
         <a href="faq.html">FAQ</a>
       </nav>
+      <a class="btn ghost" href="login.html">Portal</a>
       <a class="btn" href="apply.html">Apply</a>
     </div>
   </header>
 
-  <section>
+  <section class="page-head">
     <div class="wrap">
-      <p class="kicker">LIBRARY</p>
-      <h1>Public notes.</h1>
-      <p class="lede">Short essays on process. Free. No tickers as entertainment.</p>
+      <p class="kicker">NOTES</p>
+      <h1>Pages from the map.</h1>
+      <p class="lede">Each note treats one fact of the market. Read them in any order. None of them tell you what to buy.</p>
     </div>
   </section>
-
   <section class="band">
     <div class="wrap grid-3">
-      <article class="card">
-        <p class="meta">THE MEMO</p>
-        <h3><a href="essay-one-page.html">The one-page memo</a></h3>
-        <p>If it needs three pages of throat-clearing, you do not have the idea yet.</p>
-      </article>
-      <article class="card">
-        <p class="meta">RISK</p>
-        <h3>Name the loss first</h3>
-        <p>Coming next. A drill for writing downside in dollars, time, and reputation.</p>
-      </article>
-      <article class="card">
-        <p class="meta">CRAFT</p>
-        <h3>What intensity is not</h3>
-        <p>Coming next. Hours are not a strategy. Standards are.</p>
-      </article>
+      <article class="card"><p class="meta">STRUCTURE</p><h3><a href="essay-structure.html">The room is the product</a></h3><p>Why venue and rule come before the name on the tape.</p></article>
+      <article class="card"><p class="meta">INFORMATION</p><h3><a href="essay-one-page.html">The one-page memo</a></h3><p>A decision compressed until another adult can audit it.</p></article>
+      <article class="card"><p class="meta">RISK</p><h3><a href="essay-risk.html">Name the loss first</a></h3><p>Thesis after inventory. Never the other way around.</p></article>
+      <article class="card"><p class="meta">LIQUIDITY</p><h3><a href="essay-liquidity.html">A quote is not an exit</a></h3><p>Tightness, depth, immediacy, resilience — and capacity.</p></article>
+      <article class="card"><p class="meta">INFORMATION</p><h3><a href="essay-edge.html">Edge is a statement about the other side</a></h3><p>If you cannot say who is wrong, you do not have edge. You have hope.</p></article>
+      <article class="card"><p class="meta">PLUMBING</p><h3><a href="essay-plumbing.html">The trade is not the position</a></h3><p>Clearing, margin, and settlement are where prices become money.</p></article>
     </div>
   </section>
 
   <footer>
-    <div class="wrap"><p class="legal-mini">Independent educational brand. Not affiliated with Citadel LLC, Citadel Securities, or Kenneth C. Griffin.</p></div>
+    <div class="wrap">
+      <div class="foot">
+        <div>
+          <div class="brand" style="margin-bottom:12px">
+            <img src="assets/crest.png" alt="" />
+            <div><strong>KEN CORDELE GRIFFIN</strong><em>ACADEMY</em></div>
+          </div>
+          <p>kengriffin.courses</p>
+        </div>
+        <div>
+          <p><a href="markets.html">The market</a></p>
+          <p><a href="foundations.html">Foundations</a></p>
+          <p><a href="library.html">Notes</a></p>
+        </div>
+        <div>
+          <p><a href="legal.html">Disclosures</a></p>
+          <p><a href="apply.html">Admissions</a></p>
+          <p><a href="mailto:admissions@kengriffin.courses">admissions@kengriffin.courses</a></p>
+        </div>
+      </div>
+      <p class="legal-mini">Independent educational brand. Not affiliated with, endorsed by, or part of Citadel LLC or Citadel Securities. Nothing on this site is investment, trading, or employment advice.</p>
+    </div>
   </footer>
 </body>
 </html>

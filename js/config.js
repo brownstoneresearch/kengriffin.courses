@@ -1,0 +1,4 @@
+window.KCGA = {
+  SUPABASE_URL: "https://lhqzybazpqukqojyasoz.supabase.co",
+  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxocXp5YmF6cHF1a3Fvanlhc296Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4NTg2NzYsImV4cCI6MjEwNDQzNDY3Nn0.JytzZnWTmkA_F9mXukLX8yVZm6QIrP7QCC5R6WputWg"
+};
