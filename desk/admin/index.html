@@ -56,6 +56,8 @@
           <input id="i-title" required />
           <label>Insight</label>
           <textarea id="i-body" required></textarea>
+          <label>Image URL</label>
+          <input id="i-image" placeholder="https://…" />
           <p class="ok" id="i-ok"></p>
           <p class="err" id="i-err"></p>
           <button class="btn" type="submit">Publish to the desk</button>
@@ -142,7 +144,7 @@
     async function drawInsights() {
       const rows = await loadInsights();
       document.getElementById("insight-admin-list").innerHTML = rows.length
-        ? rows.map(x => `<article class="insight"><p class="meta">${x.layer}</p><h3>${x.title}</h3><p>${x.body}</p><p class="when">${new Date(x.at).toLocaleString()}</p><button class="btn ghost" data-del="${x.id}" type="button">Remove</button></article>`).join("")
+        ? rows.map(x => insightCard(x, true)).join("")
         : `<p class="note">No insights posted.</p>`;
       document.querySelectorAll("[data-del]").forEach(btn => {
         btn.onclick = async () => {
@@ -203,11 +205,13 @@
           title: document.getElementById("i-title").value,
           layer: document.getElementById("i-layer").value,
           body: document.getElementById("i-body").value,
-          author: me.email
+          author: me.email,
+          image: document.getElementById("i-image").value
         });
         document.getElementById("i-ok").textContent = "Posted to Supabase and the participant desk.";
         document.getElementById("i-title").value = "";
         document.getElementById("i-body").value = "";
+        document.getElementById("i-image").value = "";
         await drawInsights();
       } catch (ex) {
         document.getElementById("i-err").textContent = ex.message;

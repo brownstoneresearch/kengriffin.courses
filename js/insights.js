@@ -7,6 +7,7 @@ function mapInsight(row) {
     layer: row.layer,
     body: row.body,
     author: row.author,
+    image: row.image_url || row.image || "",
     at: row.at || row.created_at
   };
 }
@@ -24,7 +25,7 @@ async function loadInsights() {
   if (client) {
     const { data, error } = await client
       .from("insights")
-      .select("id,title,layer,body,author,created_at")
+      .select("id,title,layer,body,author,image_url,created_at")
       .order("created_at", { ascending: false })
       .limit(80);
     if (!error && data) {
@@ -36,7 +37,7 @@ async function loadInsights() {
   return cachedInsights();
 }
 
-async function publishInsight({ title, layer, body, author }) {
+async function publishInsight({ title, layer, body, author, image }) {
   const titleC = String(title || "").trim();
   const bodyC = String(body || "").trim();
   if (!titleC || !bodyC) throw new Error("Title and body are required.");
@@ -44,7 +45,8 @@ async function publishInsight({ title, layer, body, author }) {
     title: titleC,
     layer: String(layer || "The market"),
     body: bodyC,
-    author: author || "Desk"
+    author: author || "Desk",
+    image_url: String(image || "").trim() || null
   };
   const client = typeof db === "function" ? db() : null;
   if (client) {
@@ -66,6 +68,16 @@ async function removeInsight(id) {
     if (error) throw new Error(error.message);
   }
   cacheInsights(cachedInsights().filter(x => x.id !== id));
+}
+
+function insightCard(x, admin) {
+  const img = x.image
+    ? `<figure><img src="${x.image}" alt="" loading="lazy" decoding="async" /></figure>`
+    : "";
+  const del = admin
+    ? `<button class="btn ghost" data-del="${x.id}" type="button">Remove</button>`
+    : "";
+  return `<article class="insight"><p class="meta">${x.layer || ""}</p><h3>${x.title}</h3><p>${x.body}</p>${img}<p class="when">${x.at ? new Date(x.at).toLocaleString() : ""} · ${x.author || ""}</p>${del}</article>`;
 }
 
 const HANDOUTS = [

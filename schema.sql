@@ -219,8 +219,10 @@ create table if not exists public.insights (
   layer       text not null default 'The market',
   body        text not null,
   author      text,
+  image_url   text,
   created_at  timestamptz not null default now()
 );
+alter table public.insights add column if not exists image_url text;
 
 create index if not exists insights_created_at_idx on public.insights (created_at desc);
 

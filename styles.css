@@ -54,7 +54,15 @@ header {
   padding: 12px 0; gap: 20px;
 }
 .brand { display: flex; align-items: center; gap: 12px; color: var(--ivory); }
-.brand img { width: 40px; height: 40px; }
+.brand img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: transparent;
+  mix-blend-mode: lighten;
+  filter: saturate(1.05) contrast(1.04);
+}
 .brand strong { display: block; font-family: Cinzel, serif; font-size: 12px; letter-spacing: .14em; }
 .brand span { display: block; font-size: 10px; letter-spacing: .32em; color: var(--gold); }
 nav.links { display: flex; gap: 20px; flex-wrap: wrap; }
@@ -276,6 +284,18 @@ img { image-rendering: auto; }
 .insight .when { color: var(--mute); font-size: 12px; font-family: "IBM Plex Mono", monospace; }
 .insight h3 { font-family: Cinzel, serif; font-size: 22px; font-weight: 500; margin: 6px 0 10px; }
 .insight p { color: #d7deea; white-space: pre-wrap; }
+.insight figure {
+  margin: 14px 0 0;
+  border: 1px solid var(--line);
+  overflow: hidden;
+  background: #081421;
+}
+.insight figure img {
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+  display: block;
+}
 .desk-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 22px; }
 .desk-tabs a {
   border: 1px solid var(--line);

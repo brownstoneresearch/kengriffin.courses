@@ -232,7 +232,7 @@
     };
     loadInsights().then(rows => {
       document.getElementById("insight-list").innerHTML = rows.length
-        ? rows.map(x => `<article class="insight"><p class="meta">${x.layer}</p><h3>${x.title}</h3><p>${x.body}</p><p class="when">${new Date(x.at).toLocaleString()} · ${x.author || ""}</p></article>`).join("")
+        ? rows.map(x => insightCard(x, false)).join("")
         : `<article class="insight"><h3>No insight on the wire yet.</h3><p>When the administrator posts, it appears here — not on the public site.</p></article>`;
     });
     document.getElementById("vault-list").innerHTML = HANDOUTS.map(h =>
